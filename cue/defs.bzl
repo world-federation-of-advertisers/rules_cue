@@ -18,66 +18,54 @@ See https://cuelang.org/
 """
 
 def _cue_string_field_impl(ctx):
+    if len(ctx.files.srcs) != 1:
+        fail("Expected exactly one input file in srcs")
+    input = ctx.files.srcs[0]
+
+    package = ctx.attr.package
+    if not package:
+        package = ctx.label.package.replace("/", "_")
+
+    output = ctx.actions.declare_file(ctx.label.name + ".cue")
+
     args = ctx.actions.args()
-    args.add(ctx.attr.package)
+    args.add(package)
     args.add(ctx.attr.identifier)
-    args.add(ctx.file.src)
-    args.add(ctx.outputs.output)
+    args.add(input)
+    args.add(output)
 
     ctx.actions.run(
-        outputs = [ctx.outputs.output],
-        inputs = [ctx.file.src],
-        executable = ctx.executable.tool,
+        outputs = [output],
+        inputs = [input],
+        executable = ctx.executable._gen_cue_string_field,
         arguments = [args],
     )
 
-_cue_string_field = rule(
+    return [DefaultInfo(files = depset([output]))]
+
+cue_string_field = rule(
+    doc = "Generates a CUE file with a string field containing file contents.",
     implementation = _cue_string_field_impl,
     attrs = {
-        "src": attr.label(
-            allow_single_file = True,
+        "srcs": attr.label_list(
+            doc = "Single input file whose contents should be the field value.",
+            allow_files = True,
             mandatory = True,
         ),
         "identifier": attr.string(
+            doc = "CUE identifier for the string field.",
             mandatory = True,
         ),
         "package": attr.string(
-            mandatory = True,
+            doc = "CUE package. Defaults to the Bazel package name separated by underscores.",
         ),
-        "output": attr.output(mandatory = True),
-        "tool": attr.label(
+        "_gen_cue_string_field": attr.label(
             executable = True,
-            mandatory = True,
             cfg = "exec",
+            default = "@wfa_rules_cue//cue:gen-cue-string-field",
         ),
     },
 )
-
-def cue_string_field(name, src, identifier, package = None, **kwargs):
-    """Generates a CUE file with a string field containing file contents.
-
-    Output: **name**.cue
-
-    Args:
-        name: Target name.
-        src: Input file whose contents should be the field value.
-        identifier: The CUE identifier for the string field.
-        package: The CUE package. Defaults to the Bazel package name separated
-            by underscores.
-        **kwargs: Keyword arguments.
-    """
-    if not package:
-        package = native.package_name().replace("/", "_")
-
-    _cue_string_field(
-        name = name,
-        src = src,
-        identifier = identifier,
-        package = package,
-        output = name + ".cue",
-        tool = "@wfa_rules_cue//cue:gen-cue-string-field",
-        **kwargs
-    )
 
 CueInfo = provider("CUE library info.", fields = ["transitive_sources"])
 
