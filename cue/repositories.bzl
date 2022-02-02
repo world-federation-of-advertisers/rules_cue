@@ -26,19 +26,31 @@ def rules_cue_dependencies():
             ],
             sha256 = "c6966ec828da198c5d9adbaa94c05e3a1c7f21bd012a0b29ba8ddbccb2c93b0d",
         )
-
-    if "cue_binaries" not in native.existing_rules():
+    if "cue_binaries_linux_amd64" not in native.existing_rules():
         cue_binaries(
-            name = "cue_binaries",
+            name = "cue_binaries_linux_amd64",
+            platform = "linux_amd64",
             version = "0.4.1",
             sha256 = "d3f1df656101a498237d0a8b168a22253dde11f6b6b8cc577508b13a112142de",
+        )
+    if "cue_binaries_darwin_amd64" not in native.existing_rules():
+        cue_binaries(
+            name = "cue_binaries_darwin_amd64",
+            platform = "darwin_amd64",
+            version = "0.4.1",
+            sha256 = "9904f316160803cb011b7ed7524626719741a609623fe89abf149ab7522acffd",
         )
 
 def _cue_binaries_impl(rctx):
     version = rctx.attr.version
     sha256 = rctx.attr.sha256
+    platform = rctx.attr.platform
 
-    url = "https://github.com/cue-lang/cue/releases/download/v{version}/cue_v{version}_linux_amd64.tar.gz".format(version = version)
+    os_restriction = "@platforms//os:macos" if platform == "darwin_amd64" else "@platforms//os:linux"
+    url = "https://github.com/cue-lang/cue/releases/download/v{version}/cue_v{version}_{platform}.tar.gz".format(
+        version = version,
+        platform = platform,
+    )
 
     rctx.download_and_extract(
         url = url,
@@ -48,9 +60,19 @@ def _cue_binaries_impl(rctx):
         "BUILD.bazel",
         Label("@wfa_rules_cue//cue:BUILD.external"),
         executable = False,
+        substitutions = {
+            "{os_restriction}": os_restriction,
+        },
     )
 
 cue_binaries = repository_rule(
     implementation = _cue_binaries_impl,
-    attrs = {"version": attr.string(mandatory = True), "sha256": attr.string()},
+    attrs = {
+        "platform": attr.string(
+            mandatory = True,
+            values = ["linux_amd64", "darwin_amd64"],
+        ),
+        "version": attr.string(mandatory = True),
+        "sha256": attr.string(),
+    },
 )
