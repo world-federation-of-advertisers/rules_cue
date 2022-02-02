@@ -1,0 +1,12 @@
+load("//cue:defs.bzl", "cue_export", "cue_library")
+
+cue_library(
+    name = "k8s",
+    srcs = ["k8s.cue"],
+)
+
+cue_export(
+    name = "k8s_manifest",
+    expression = "listObject",
+    deps = [":k8s"],
+)
