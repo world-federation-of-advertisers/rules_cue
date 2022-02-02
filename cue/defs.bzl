@@ -160,7 +160,7 @@ cue_export = rule(
             doc = "Dict of CUE tags to values. Values subject to 'Make variable' substitution.",
         ),
         "_cue_cli": attr.label(
-            default = "@cue_binaries//:cue_cli",
+            default = "@wfa_rules_cue//cue:cue_cli",
             executable = True,
             cfg = "exec",
         ),
