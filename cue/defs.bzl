@@ -157,7 +157,7 @@ cue_export = rule(
         ),
         "expression": attr.string(),
         "cue_tags": attr.string_dict(
-            doc = "Dict of CUE tags to values. Values may contain Make variables.",
+            doc = "Dict of CUE tags to values. Values subject to 'Make variable' substitution.",
         ),
         "_cue_cli": attr.label(
             default = "@cue_binaries//:cue_cli",

@@ -12,7 +12,27 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-"""Repository rules/macros for CUE."""
+"""Repository rules/macros for rules_cue."""
+
+load("@bazel_tools//tools/build_defs/repo:http.bzl", "http_archive")
+
+def rules_cue_dependencies():
+    if "bazel_skylib" not in native.existing_rules():
+        http_archive(
+            name = "bazel_skylib",
+            urls = [
+                "https://mirror.bazel.build/github.com/bazelbuild/bazel-skylib/releases/download/1.1.1/bazel-skylib-1.1.1.tar.gz",
+                "https://github.com/bazelbuild/bazel-skylib/releases/download/1.1.1/bazel-skylib-1.1.1.tar.gz",
+            ],
+            sha256 = "c6966ec828da198c5d9adbaa94c05e3a1c7f21bd012a0b29ba8ddbccb2c93b0d",
+        )
+
+    if "cue_binaries" not in native.existing_rules():
+        cue_binaries(
+            name = "cue_binaries",
+            version = "0.4.1",
+            sha256 = "d3f1df656101a498237d0a8b168a22253dde11f6b6b8cc577508b13a112142de",
+        )
 
 def _cue_binaries_impl(rctx):
     version = rctx.attr.version
