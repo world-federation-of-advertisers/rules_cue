@@ -1,4 +1,4 @@
-load("//cue:defs.bzl", "cue_export", "cue_library")
+load("//cue:defs.bzl", "cue_export", "cue_library", "cue_string_field")
 
 cue_library(
     name = "k8s",
@@ -9,4 +9,10 @@ cue_export(
     name = "k8s_manifest",
     expression = "listObject",
     deps = [":k8s"],
+)
+
+cue_string_field(
+    name = "string_field",
+    srcs = ["string_value.txt"],
+    identifier = "stringField",
 )
