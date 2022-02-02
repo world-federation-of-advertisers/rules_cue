@@ -1,0 +1,3 @@
+I am a file
+that gets read in
+to a CUE string field
