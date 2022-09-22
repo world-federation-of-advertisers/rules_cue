@@ -133,6 +133,7 @@ cue_export = rule(
         "srcs": attr.label_list(
             doc = "Source CUE files.",
             allow_files = [".cue"],
+            allow_empty = True,
         ),
         "deps": attr.label_list(
             doc = "cue_library dependencies.",
