@@ -97,6 +97,9 @@ cue_library = rule(
 )
 
 def _cue_export_impl(ctx):
+    if len(ctx.files.srcs) == 0 and len(ctx.attr.deps) == 0:
+        fail("Expected to have srcs or deps")
+
     outfile = ctx.actions.declare_file(
         ".".join((ctx.label.name, ctx.attr.filetype)),
     )
@@ -133,10 +136,12 @@ cue_export = rule(
         "srcs": attr.label_list(
             doc = "Source CUE files.",
             allow_files = [".cue"],
+            allow_empty = True,
         ),
         "deps": attr.label_list(
             doc = "cue_library dependencies.",
             providers = [CueInfo],
+            allow_empty = True,
         ),
         "filetype": attr.string(
             doc = "Output filetype.",
