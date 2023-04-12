@@ -40,15 +40,15 @@ def rules_cue_dependencies():
         cue_binaries(
             name = "cue_binaries_linux_amd64",
             platform = "linux_amd64",
-            version = "0.4.3",
-            sha256 = "5e7ecb614b5926acfc36eb1258800391ab7c6e6e026fa7cacbfe92006bac895c",
+            version = "0.5.0",
+            sha256 = "38c9a2f484076aeafd9f522efdee40538c31337539bd8c80a29f5c4077314e53",
         )
     if "cue_binaries_darwin_amd64" not in native.existing_rules():
         cue_binaries(
             name = "cue_binaries_darwin_amd64",
             platform = "darwin_amd64",
-            version = "0.4.3",
-            sha256 = "1161254cf38b928b87a7ac1552dc2e12e6c5da298f9ce370d80e5518ddb6513d",
+            version = "0.5.0",
+            sha256 = "00fc991977232240893ae36dc852366af859214d6e1b2b9e03e93b8f9f0991a7",
         )
 
 def _cue_binaries_impl(rctx):
