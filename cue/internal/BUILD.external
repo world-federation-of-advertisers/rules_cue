@@ -1,6 +1,6 @@
-package(default_visibility = ["//visibility:public"])
-
 load("@bazel_skylib//rules:native_binary.bzl", "native_binary")
+
+package(default_visibility = ["//visibility:public"])
 
 RESTRICTIONS = [
     "{os_restriction}",

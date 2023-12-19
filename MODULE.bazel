@@ -1,0 +1,23 @@
+module(
+    name = "rules_cue",
+    repo_name = "wfa_rules_cue",
+)
+
+bazel_dep(
+    name = "platforms",
+    version = "0.0.8",
+)
+bazel_dep(
+    name = "bazel_skylib",
+    version = "1.5.0",
+)
+
+non_module_deps = use_extension(
+    "//cue/internal:non_module_deps.bzl",
+    "non_module_deps",
+)
+use_repo(
+    non_module_deps,
+    "cue_binaries_darwin_amd64",
+    "cue_binaries_linux_amd64",
+)
