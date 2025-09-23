@@ -31,7 +31,7 @@ def _non_module_deps_impl(
             name = "cue_binaries_darwin_amd64",
             platform = "darwin_amd64",
             version = "0.5.0",
-            sha256 = "00fc991977232240893ae36dc852366af859214d6e1b2b9e03e93b8f9f0991a7",
+            sha256 = "e2cede1965afa66dc52de7c1cd461227f4ff924f7a2adc9791cf1a699485409f",
         )
 
 non_module_deps = module_extension(implementation = _non_module_deps_impl)
